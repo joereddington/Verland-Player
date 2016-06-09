@@ -2,14 +2,19 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="static/css/player.css" rel="stylesheet">
 
-    <script type="text/javascript" src="static/js/jquery-2.2.4.min.js"></script>
-    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/player.css" rel="stylesheet">
+
+    <script type="text/javascript" src="/static/js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="/static/js/srt_player.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
+<!--text display-->
 <div class="container-fluid">
     <div class="row">
         <div id="subtitle-text" class="col-md-12">
@@ -18,11 +23,33 @@
     </div>
 </div>
 
-
+<!--controls-->
+<div class="container">
+    <div id="controls" class="row">
+        <div id="control-box" class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <i id="back-icon" class="fa fa-step-backward"></i>
+            <i id="stop-icon" class="fa fa-stop"></i>
+            <i id="play-icon" class="fa fa-play"></i>
+            <i id="fwd-icon" class="fa fa-step-forward"></i>
+        </div>
+        <div id="current-time" class="col-lg-1 col-md-1 col-xs-12">
+            0:00
+        </div>
+        <div class="col-lg-7 col-md-8 col-xs-12">
+            <input type="range" min="0" max="10">
+        </div>
+        <div id="total-time" class="col-lg-1 col-md-1 col-xs-12">
+            0:00
+        </div>
+    </div>
+</div>
 
 <script>
-
-
+    $(document).ready(function() {
+        var file = "{{ srt_file | safe }}"
+        SRT_PLAYER.initialize(file);
+    });
 </script>
+
 </body>
 </html>
