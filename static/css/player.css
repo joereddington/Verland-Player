@@ -1,0 +1,10 @@
+body {
+    background-color: #083045;
+}
+
+#subtitle-text {
+    /*color: #e0e0e0;*/
+    color: #ffe16c;
+    font-size: 22pt;
+    text-align: center;
+}
