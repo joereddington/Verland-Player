@@ -44,29 +44,30 @@
     }
 
     function _advance_subs() {
+        //$('#subtitle-text').empty();
         var sub = _content[_index];
         t_start = _time_from_timestamp(sub.tstart); 
         t_stop = _time_from_timestamp(sub.tstop); 
         var intvl = t_stop.getTime() - t_start.getTime();
-        //alert(intvl);
+        alert(intvl);
         function do_interval() {
+            alert(intvl);
             setTimeout(function() {
                 _advance_frame();
-                _advance_subs();
+                //$('#subtitle-text').empty();
+                return _advance_subs();
             }, intvl);
         }
-        //make sure we sure display occurs in sync with clock
-        //while (true) {
-            //alert(intvl);
-            //alert(t_start.getTime());
-            //if (_t_count >= t_start.getTime()) {
-                //alert(intvl);
-                //alert(t_start.getTime());
-                //_advance_frame();
-                do_interval();
-                //break;
-            //}
-        //}
+        function check_start() {
+            if (_t_count >= t_start.getTime()) {
+                _advance_frame();
+                return do_interval();
+            }
+            else{
+                setTimeout(check_start, 100)
+            }
+        }
+        check_start();
     }
 
     function _get_content(srt_file) {
@@ -157,7 +158,7 @@
         if (! _check_get_content(file)) {
             return
         }
-        _refresh_display();
+        //_refresh_display();
         _start_timer();
         _advance_subs();
         //alert(_content.srts);
