@@ -2,7 +2,7 @@
 
     var _content = undefined;
     var _srt_file = undefined;
-    var _index = 0;
+    var _index = -1;
     var _timer;
     var _t_intvl;
     //milliseconds
@@ -44,27 +44,26 @@
     }
 
     function _advance_subs() {
-        //$('#subtitle-text').empty();
-        var sub = _content[_index];
+        //todo stop if length
+        var sub = _content[_index + 1];
         t_start = _time_from_timestamp(sub.tstart); 
         t_stop = _time_from_timestamp(sub.tstop); 
         var intvl = t_stop.getTime() - t_start.getTime();
-        alert(intvl);
         function do_interval() {
-            alert(intvl);
             setTimeout(function() {
-                _advance_frame();
-                //$('#subtitle-text').empty();
+                $('#subtitle-text').empty();
                 return _advance_subs();
             }, intvl);
         }
         function check_start() {
-            if (_t_count >= t_start.getTime()) {
+            //start sub slightly early if possible to compensate for
+            //render time. 
+            if (_t_count + 130 >= t_start.getTime()) {
                 _advance_frame();
                 return do_interval();
             }
             else{
-                setTimeout(check_start, 100)
+                setTimeout(check_start, 50)
             }
         }
         check_start();
