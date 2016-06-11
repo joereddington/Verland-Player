@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import re
+import codecs
 
 def srt_parser(file_):
     '''Parses a srt file.
@@ -14,7 +15,25 @@ def srt_parser(file_):
     '''
     out = []
 
-    text = open(file_, 'r').read()
+    encodes = ['utf-8', 'windows-1252', 'windows-1250', 'cp1250']
+    #find out what kind of file is is and open like that
+    can_open = False
+    for encode in encodes:
+        try:
+            text = codecs.open(file_, 'r', encode).read()
+            can_open = True
+            file_encoding = encode
+        except:
+            pass
+
+    if not can_open:
+        return False
+
+    try:
+        text = text.decode(file_encoding)
+    except:
+        pass
+
     try:
         text = text.encode('utf8')
     except:
