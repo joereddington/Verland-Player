@@ -43,6 +43,32 @@
         $('#current-time').text(t);
     }
 
+    function _advance_subs() {
+        var sub = _content[_index];
+        t_start = _time_from_timestamp(sub.tstart); 
+        t_stop = _time_from_timestamp(sub.tstop); 
+        var intvl = t_stop.getTime() - t_start.getTime();
+        //alert(intvl);
+        function do_interval() {
+            setTimeout(function() {
+                _advance_frame();
+                _advance_subs();
+            }, intvl);
+        }
+        //make sure we sure display occurs in sync with clock
+        //while (true) {
+            //alert(intvl);
+            //alert(t_start.getTime());
+            //if (_t_count >= t_start.getTime()) {
+                //alert(intvl);
+                //alert(t_start.getTime());
+                //_advance_frame();
+                do_interval();
+                //break;
+            //}
+        //}
+    }
+
     function _get_content(srt_file) {
         var rslt = true;
         if (srt_file == undefined) {
@@ -62,9 +88,9 @@
         return rslt
     };
 
-    function _content_at_index() {
-        return _content[_index];
-    };
+    //function _content_at_index() {
+        //return _content[_index];
+    //};
 
     function _advance_frame() {
         _index += 1;
@@ -73,6 +99,7 @@
             return
         }
         _refresh_display();
+        //todo update time
     };
 
     function _regress_frame() {
@@ -82,6 +109,7 @@
             return
         }
         _refresh_display();
+        //todo update time
     };
 
     function _update_text(text_array) {
@@ -97,14 +125,21 @@
 
     function _time_from_timestamp(timetext) {
         //returns javascript Date object from srt style text
-
+        //only hours, minutes seconds and milliseconds are important
+        //example: 00:01:30,082
+        var splt = timetext.split(',');
+        var millisec = +splt[1];
+        var hms = splt[0].split(':');
+        var hrs = +hms[0];
+        var min = +hms[1];
+        var sec = +hms[2];
+        return new Date(1971, 0, 1, hrs, min, sec, millisec);
     }
 
     function _refresh_display() {
         //refreshes based on current index
         var node = _content[_index];
         _update_text(node.text);
-
     };
 
     function _check_get_content(file) {
@@ -124,8 +159,8 @@
         }
         _refresh_display();
         _start_timer();
+        _advance_subs();
         //alert(_content.srts);
-
     };
 
 }(window.SRT_PLAYER = window.SRT_PLAYER || {}, $));
