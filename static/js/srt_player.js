@@ -46,8 +46,8 @@
     function _advance_subs() {
         //todo stop if length
         var sub = _content[_index + 1];
-        t_start = _time_from_timestamp(sub.tstart); 
-        t_stop = _time_from_timestamp(sub.tstop); 
+        var t_start = _time_from_timestamp(sub.tstart); 
+        var t_stop = _time_from_timestamp(sub.tstop); 
         var intvl = t_stop.getTime() - t_start.getTime();
         function do_interval() {
             setTimeout(function() {
@@ -157,10 +157,8 @@
         if (! _check_get_content(file)) {
             return
         }
-        //_refresh_display();
         _start_timer();
         _advance_subs();
-        //alert(_content.srts);
     };
 
 }(window.SRT_PLAYER = window.SRT_PLAYER || {}, $));
