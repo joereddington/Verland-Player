@@ -33,11 +33,11 @@
             <input type="range" min="0" max="10">
         </div>
         <div id="control-box" class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <i id="back-icon" class="fa fa-step-backward"></i>
-            <i id="stop-icon" class="fa fa-stop"></i>
+            <i id="back-icon" class="fa fa-step-backward" onclick="SRT_PLAYER.step('back');"></i>
+            <i id="stop-icon" class="fa fa-stop" onclick="SRT_PLAYER.stop();"></i>
             <i id="pause-icon" class="fa fa-pause" onClick="SRT_PLAYER.pause();"></i>
             <i id="play-icon" class="fa fa-play" onclick="SRT_PLAYER.play();"></i>
-            <i id="fwd-icon" class="fa fa-step-forward"></i>
+            <i id="fwd-icon" class="fa fa-step-forward" onclick="SRT_PLAYER.step('fwd');"></i>
         </div>
     </div>
 </div>

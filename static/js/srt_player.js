@@ -26,7 +26,9 @@
     function _advance_timer() {
         _t_count += 100;
         _timer.setTime(_t_count);
-        if ((_t_count % 1000) == 0) {
+        //ff and rewind move timecount off hundreds places.
+        var roundup = Math.ceil((_t_count + 10) / 100) * 100;
+        if ((roundup % 1000) == 0) {
             _update_clock_display();
         }
     };
@@ -58,7 +60,7 @@
     };
 
     function _advance_subs() {
-        //todo stop if length
+        //todo stop if at end
         var sub = _content[_index + 1];
         var t_start = _time_from_timestamp(sub.tstart); 
         var t_stop = _time_from_timestamp(sub.tstop); 
@@ -114,14 +116,18 @@
     function _regress_frame() {
         _index -= 1;
         if (_index < 0) {
-            _index -= 0;
+            _index = 0;
             return
         }
         _refresh_display();
     };
 
     function _update_timer_time() {
-        //manual update of timer based on sub start time
+        //manual update of timer based on sub start time for current
+        var sub = _content[_index];
+        _timer = _time_from_timestamp(sub.tstart);
+        _t_count = _timer.getTime();
+        _update_clock_display();
     };
 
     function _update_text(text_array) {
@@ -168,6 +174,14 @@
         $('#control-box .fa').css('opacity', '1');
         $(button).css('opacity', '.3');
     };
+
+    function _stop_player() {
+        _stop_timer();
+        _pause_sequence();
+        _t_count = 0;
+        _index = -1;
+        $('#subtitle-text').empty();
+    };
     
     //public methods
     SRT_PLAYER.initialize = function(file) {
@@ -176,7 +190,7 @@
             //return
         }
         var len = _content.length;
-        alert(len);
+        //alert(len);
         //_start_timer();
         //_advance_subs();
     };
@@ -201,13 +215,21 @@
         _mark_current_button($('#play-icon'));
     };
 
-    SRT_PLAYER.fwd = function() {
-    };
-
-    SRT_PLAYER.back = function() {
+    SRT_PLAYER.step = function(direction) {
+        //fwd and rewind. will pause first
+        SRT_PLAYER.pause();
+        if (direction == 'fwd') {
+            _advance_frame();
+        }
+        else if (direction == 'back') {
+            _regress_frame();
+        }
+        _update_timer_time();
     };
 
     SRT_PLAYER.stop = function() {
+        _stop_player();
+        _mark_current_button($('#stop-icon'));
     };
 
 }(window.SRT_PLAYER = window.SRT_PLAYER || {}, $));
