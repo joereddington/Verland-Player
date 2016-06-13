@@ -1,20 +1,30 @@
 #!/usr/bin/env python
+
 import re
 import codecs
+import json
+from hashlib import md5
 
-def srt_parser(file_):
-    '''Parses a srt file.
+def _get_hash(file_content):
+    '''Returns md5 has from text string
     Args:
-        file_: path to srt file to parse
-
-    Returns: List of dictionaries each with following keys:
-            'tstart':str: time start
-            'tstop':str: time stop
-            'number':str: subtitle number
-            'text':list: list of text strings for subtitle
+        file_content: text string.
+    Returns: md5 hash string.
     '''
-    out = []
+    hashf = md5()
+    hashf.update(file_content)
+    return hashf.hexdigest()
 
+def _open_endoded(file_):
+    '''Opens a file with appropriate encoding.
+    Will attempt to encode utf-8.
+    Args:
+        file_: a file location.
+    Returns:
+        file contents (text)
+        or 
+        Boolean (False) if file can't be opened.
+    '''
     encodes = ['utf-8', 'windows-1252', 'windows-1250', 'cp1250']
     #find out what kind of file is is and open like that
     can_open = False
@@ -38,12 +48,57 @@ def srt_parser(file_):
         text = text.encode('utf8')
     except:
         text = text
+
+    return text
+
+def check_same(file_, hash_):
+    '''Checks if file is same. If not reloads.
+    Args:
+        file_: a file location.
+        hash_: md5 hash string.
+    Returns:
+        Boolean (True) if files are the same.
+        or
+        Updated JSON object for file if different.
+    '''
+    pass
+
+def srt_parser(file_, recheck=False):
+    '''Parses a srt file.
+    Args:
+        file_: path to srt file to parse.
+        recheck: Boolean. if this a recheck stop at reading file
+
+    Returns: JSON or Boolean (False) if file can't be read.
+        JSON keys:
+            srts:
+            List of dictionaries each with following keys:
+                    'tstart':str: time start
+                    'tstop':str: time stop
+                    'number':str: subtitle number
+                    'text':list: list of text strings for subtitle.
+            hash: md5 hash of file.
+            file_name: name of file.
+    '''
+    out = {'subs': []}
+
+    text = _open_endoded(file_)
+
+    if not text:
+        return False
+
+    out['file_hash'] = _get_hash(text); 
+
     text = text.split('\n')
 
     count = 0
     tmp = {'text': []}
 
     for line in text:
+
+        #vtt files have this phrase at begining
+        if 'WEBVTT' in line:
+            continue
 
         line = line.strip()
 
@@ -53,7 +108,7 @@ def srt_parser(file_):
         if line.replace(' ', '') == '':
             count = 0
             if not False in [i in tmp for i in ['tstart', 'tstop', 'text', 'number']]:
-                out.append(tmp)
+                out['subs'].append(tmp)
             tmp = {'text': []}
             continue
 
@@ -85,8 +140,8 @@ def srt_parser(file_):
                 tsp = timeline[1].strip()
                 assert len(tst.split(':')) == 3
                 assert len(tsp.split(':')) == 3
-                assert len(tst.split(',')) == 2
-                assert len(tsp.split(',')) == 2
+                assert len(tst.split('.')) == 2
+                assert len(tsp.split('.')) == 2
                 tmp['tstart'] = tst
                 tmp['tstop'] = tsp
             except:
@@ -100,7 +155,7 @@ def srt_parser(file_):
 
         count += 1
     
-    return out
+    return json.dumps(out, ensure_ascii=False)
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ def player(srt_file):
 @app.route('/srt/<srt_file>', methods=["POST"])
 def srt_json(srt_file):
     srt_file = 'static/subtitles/' + srt_file
-    return json.dumps({'srts': srt_parser.srt_parser(srt_file)}, ensure_ascii=False)
+    return srt_parser.srt_parser(srt_file);
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
