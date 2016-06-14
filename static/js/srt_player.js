@@ -248,6 +248,7 @@
         _pause_sequence();
         _t_count = 0;
         _index = -1;
+        $('#slidebar').val(0);
         $('#subtitle-text').empty();
     };
 

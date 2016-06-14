@@ -2,16 +2,22 @@
 
 from flask import Flask, render_template, request
 
-from views import srt_parser
+#from views import srt_parser
+from views import srt_parser, srt_list
 import json
 
 app = Flask(__name__)
+
+@app.route('/')
+def index():
+    subs = srt_list.srt_list()
+    return render_template('index.html', subs=subs)
 
 @app.route('/player/<srt_file>')
 def player(srt_file):
     #srt_file = 'The.Gift.2015.720p.BluRay.x264-DRONES-HI.srt'
     #srt_file = 'Eng.srt'
-    srt_file = 'esp.vtt'
+    #srt_file = 'esp.vtt'
     return render_template('player.html', srt_file=srt_file)
 
 @app.route('/srt/<srt_file>', methods=["POST"])

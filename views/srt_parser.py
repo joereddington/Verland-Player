@@ -51,18 +51,6 @@ def _open_endoded(file_):
 
     return text
 
-def check_same(file_, hash_):
-    '''Checks if file is same. If not reloads.
-    Args:
-        file_: a file location.
-        hash_: md5 hash string.
-    Returns:
-        Boolean (True) if files are the same.
-        or
-        Updated JSON object for file if different.
-    '''
-    pass
-
 def srt_parser(file_, hash_=None):
     '''Parses a srt file.
     Args:
