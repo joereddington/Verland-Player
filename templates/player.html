@@ -43,8 +43,8 @@
 
 <script>
     $(document).ready(function() {
-        var file = "{{ srt_file | safe }}"
-        SRT_PLAYER.initialize(file);
+        file_name = "{{ srt_file | safe }}"
+        SRT_PLAYER.initialize(file_name);
     });
 </script>
 

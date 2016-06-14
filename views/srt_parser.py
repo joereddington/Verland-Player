@@ -63,7 +63,7 @@ def check_same(file_, hash_):
     '''
     pass
 
-def srt_parser(file_, recheck=False):
+def srt_parser(file_, hash_=None):
     '''Parses a srt file.
     Args:
         file_: path to srt file to parse.
@@ -87,7 +87,15 @@ def srt_parser(file_, recheck=False):
     if not text:
         return False
 
-    out['file_hash'] = _get_hash(text); 
+    out['hash'] = _get_hash(text)
+
+    if out['hash'] == hash_:
+        return json.dumps({'recheck': 'current'})
+
+    if hash_:
+        out['recheck'] = 'yes'
+    else:
+        out['recheck'] = 'no'
 
     text = text.split('\n')
 

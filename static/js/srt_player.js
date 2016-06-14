@@ -20,6 +20,8 @@
     var _end_time;
     //slidebar step value
     var _slide_step = 1;
+    //md5
+    var _hash;
     //var _slide = $('#slidebar'); 
 
     function _start_timer() {
@@ -49,6 +51,14 @@
         if ((roundup % 1000) == 0) {
             _update_clock_display();
         }
+        //check for changes every 30 seconds
+        if ((roundup % 15000) == 0) {
+            _check_file_changes();
+        }
+    };
+
+    function _check_file_changes() {
+        _get_content(file_name, _hash);
     };
 
     function _stop_timer() {
@@ -125,22 +135,35 @@
         _end_time = _time_from_timestamp(last.tstop); 
     };
 
-    function _get_content(srt_file) {
-        //var rslt = true;
+    function _get_content(srt_file, md5) {
         if (srt_file == undefined) {
             return false
         }
+        var data = {
+            'hash': _hash || 'none'
+        };
         var url = '/srt/' + srt_file;
         $.ajax({
             type: 'POST',
             url: url,
+            data: data,
             dataType: 'json',
             async: false,
             success: function(rslt) {
+                //if it's a recheck and current don't do anything
+                if (rslt.recheck == 'current') {
+                    return;
+                }
                 _content = rslt.subs;
                 if (_content != undefined) {
-                    _get_sub_rslt = true
+                    _file_name = rslt.file_name;
+                    _hash = rslt.hash;
+                    _get_sub_rslt = true;
                     _set_end_time();
+                    //if it's a recheck
+                    if (rslt.recheck == 'yes') {
+                        _reinitialize_slide();
+                    };
                 }
             }
         });
@@ -235,14 +258,11 @@
         }
     };
 
-    function _initialize_slide() {
-        //set slider bar intervals and bind sliding to sub update.
-        //if there are lots of slides step by multiples on slide.
+    function _set_slide() {
+        //this does the actual slide steps and bindings
         var num_slides = _content.length;
         var _slide_step = Math.ceil(num_slides / 100);
         var max = num_slides;
-        $('#slidebar').attr('value', 0);
-        $('#slidebar').val(0);
         $('#slidebar').attr('max', max);
         $('#slidebar').attr('step', _slide_step);
         $('#slidebar').on('change', function() {
@@ -252,6 +272,16 @@
                 _update_timer_time();
             });
         });
+    };
+
+    function _reinitialize_slide() {
+        _set_slide();
+    };
+
+    function _initialize_slide() {
+        $('#slidebar').attr('value', 0);
+        $('#slidebar').val(0);
+        _set_slide();
     };
 
     //public methods

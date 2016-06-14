@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 from views import srt_parser
 import json
@@ -16,8 +16,12 @@ def player(srt_file):
 
 @app.route('/srt/<srt_file>', methods=["POST"])
 def srt_json(srt_file):
+    #print request.form['hash']
+    hash_ = request.form['hash']
+    if hash_ == 'none':
+        hash_ = None
     srt_file = 'static/subtitles/' + srt_file
-    return srt_parser.srt_parser(srt_file);
+    return srt_parser.srt_parser(srt_file, hash_);
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
