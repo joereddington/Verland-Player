@@ -1,7 +1,32 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
 body {
     background-color: #083045;
+    margin-bottom: 35px;
 }
-
+.footer {
+    position: absolute;
+    bottom: 0;
+    height: 35px;
+    font-size: 10pt;
+    min-width: 100%;
+}
+.footer .col-lg-8 {
+    font-size: 12pt;
+    color: #ebebeb; 
+}
+.footer .col-lg-8 .yellow {
+    color: #ffe16c;
+}
+.footer .col-lg-4 {
+    text-align: right;
+    padding-right: 16px;
+}
+.footer .col-lg-4 a {
+    color: #c2eeff;
+}
 #subtitle-text {
     color: #ffe16c;
     box-sizing: border-box;
