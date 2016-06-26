@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+import sys
+sys.path.append('python_packages')
+
 from flask import Flask, render_template, request
 
-#from views import srt_parser
 from views import srt_parser, srt_list
 import json
 
