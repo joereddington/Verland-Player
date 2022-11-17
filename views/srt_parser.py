@@ -85,6 +85,7 @@ def srt_parser(file_, hash_=None):
     else:
         out['recheck'] = 'no'
 
+    text=str(text)
     text = text.split('\n')
 
     count = 0
@@ -157,4 +158,5 @@ def srt_parser(file_, hash_=None):
 if __name__ == '__main__':
     content = parser('../static/subtitles/The.Gift.2015.720p.BluRay.x264-DRONES-HI.srt')
     for line in content:
-        print line
+        print(line)
+
