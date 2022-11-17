@@ -85,14 +85,13 @@ def srt_parser(file_, hash_=None):
     else:
         out['recheck'] = 'no'
 
-    text=str(text)
     text = text.split('\n')
 
     count = 0
     tmp = {'text': []}
 
     for line in text:
-
+        line=line.decode()
         #vtt files have this phrase at begining
         if 'WEBVTT' in line:
             continue
