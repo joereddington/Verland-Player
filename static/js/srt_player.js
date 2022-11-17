@@ -131,11 +131,13 @@
     };
 
     function _set_end_time() {
+        console.log("set end time function");
         var last = _content[_content.length - 1];
         _end_time = _time_from_timestamp(last.tstop); 
     };
 
     function _get_content(srt_file, md5) {
+        console.log("Calling get content");
         if (srt_file == undefined) {
             return false
         }
@@ -143,6 +145,7 @@
             'hash': _hash || 'none'
         };
         var url = '/srt/' + srt_file;
+        console.log("The url is: "+url);
         $.ajax({
             type: 'POST',
             url: url,
@@ -151,10 +154,13 @@
             async: false,
             success: function(rslt) {
                 //if it's a recheck and current don't do anything
+                console.log("Inside that function");
                 if (rslt.recheck == 'current') {
+                    console.log("Returning because it's current");
                     return;
                 }
                 _content = rslt.subs;
+                console.log("**"+_content+"**");
                 if (_content != undefined) {
                     _file_name = rslt.file_name;
                     _hash = rslt.hash;
@@ -230,6 +236,8 @@
 
     function _check_get_content(file) {
         var rslt = _get_content(file);
+        alert(rslt);
+        alert(_content);
         if (! rslt) {
             alert('cannot retrieve srt file.');
             return false
@@ -287,6 +295,7 @@
 
     //public methods
     SRT_PLAYER.initialize = function(file) {
+        alert('hello!');
         if (! _check_get_content(file)) {
             alert('cannot load subtitles');
         }

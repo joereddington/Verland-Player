@@ -71,6 +71,8 @@ def srt_parser(file_, hash_=None):
     out = {'subs': []}
 
     text = _open_endoded(file_)
+    print("1")
+    print(text)
 
     if not text:
         return False
@@ -84,15 +86,24 @@ def srt_parser(file_, hash_=None):
         out['recheck'] = 'yes'
     else:
         out['recheck'] = 'no'
-
-    text=str(text)
-    text = text.split('\n')
+    print(type(text))
+    text = text.split(b'\n')
+    print("2")
+    print(text)
+    print("3")
 
     count = 0
+    joe_count=0
     tmp = {'text': []}
-
+    print("4")
+    print(len(text))
     for line in text:
-
+        joe_count+=1
+        line=line.decode()
+        print("3.1")
+        print(line)
+        print(len(line))
+        print(joe_count)
         #vtt files have this phrase at begining
         if 'WEBVTT' in line:
             continue
@@ -102,10 +113,11 @@ def srt_parser(file_, hash_=None):
         #blank lines between sub entries
         #if there is a sub with blank lines we won't include it.
         #nothing will show during that period which is expected.
-        if line.replace(' ', '') == '':
+        if len(line) <1: 
             count = 0
             if not False in [i in tmp for i in ['tstart', 'tstop', 'text', 'number']]:
                 out['subs'].append(tmp)
+            print("XXX HERE") 
             tmp = {'text': []}
             continue
 
@@ -151,7 +163,8 @@ def srt_parser(file_, hash_=None):
             tmp['text'].append(line)
 
         count += 1
-    
+    print("n-1")
+    print(json.dumps(out))
     return json.dumps(out, ensure_ascii=False)
 
 
