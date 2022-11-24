@@ -142,7 +142,7 @@
         var data = {
             'hash': _hash || 'none'
         };
-        var url = '/srt/' + srt_file;
+        var url = '/supertitle/srt/' + srt_file;
         $.ajax({
             type: 'POST',
             url: url,

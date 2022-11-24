@@ -85,7 +85,7 @@ def srt_parser(file_, hash_=None):
     else:
         out['recheck'] = 'no'
 
-    text = text.split('\n')
+    text = text.split(b'\n')
 
     count = 0
     tmp = {'text': []}
